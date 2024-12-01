@@ -1,0 +1,6 @@
+[workspace]
+members = ["2024/day1"]
+
+[workspace.dependencies]
+anyhow = "1.0.93"
+clap = "4.5.21"
