@@ -30,11 +30,12 @@ fn part1(mut list1: Vec<i64>, mut list2: Vec<i64>) -> i64 {
     list1.sort();
     list2.sort();
 
-    let mut total_distance = 0;
-    for i in 0..list1.len() {
-        total_distance += (list1[i] - list2[i]).abs();
-    }
-    total_distance
+    list1
+        .into_iter()
+        .zip(list2)
+        .fold(0, |acc, (list1_value, list2_value)| {
+            acc + (list1_value - list2_value).abs()
+        })
 }
 
 fn part2(list1: Vec<i64>, list2: Vec<i64>) -> i64 {
@@ -43,12 +44,9 @@ fn part2(list1: Vec<i64>, list2: Vec<i64>) -> i64 {
         acc
     });
 
-    let mut similarity_score = 0;
-    for num in list1 {
-        similarity_score += num * list2_counts.get(&num).unwrap_or(&0);
-    }
-
-    similarity_score
+    list1.into_iter().fold(0, |acc, list1_value| {
+        acc + list1_value * list2_counts.get(&list1_value).unwrap_or(&0)
+    })
 }
 
 fn parse_input(input_file: &Path) -> Result<(Vec<i64>, Vec<i64>)> {
