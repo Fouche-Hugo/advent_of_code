@@ -1,6 +1,7 @@
 { pkgs ? import <nixpkgs> {}
 }: pkgs.mkShell {
   nativeBuildInputs = with pkgs.buildPackages; [
+    python314
     cargo
     clippy
     rustfmt
@@ -12,6 +13,7 @@
         rust-lang.rust-analyzer
         tamasfe.even-better-toml
         vscodevim.vim
+        vscode-extensions.ms-python.python
       ];
     })
   ];
