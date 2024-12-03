@@ -1,0 +1,9 @@
+[package]
+name = "y2024d3"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = { workspace = true }
+clap = { workspace = true, features = ["derive"] }
+regex = "1.11.1"
