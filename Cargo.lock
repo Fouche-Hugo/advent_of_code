@@ -303,3 +303,11 @@ dependencies = [
  "clap",
  "regex",
 ]
+
+[[package]]
+name = "y2024d4"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+]
