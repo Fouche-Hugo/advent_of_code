@@ -2,7 +2,6 @@ use anyhow::Result;
 use clap::Parser;
 use std::{
     collections::HashSet,
-    num::ParseIntError,
     path::{Path, PathBuf},
 };
 
@@ -29,12 +28,6 @@ fn main() -> Result<()> {
 
 #[derive(Debug)]
 struct Antenna {
-    location: Location,
-    frequency: char,
-}
-
-#[derive(Debug)]
-struct Antinode {
     location: Location,
     frequency: char,
 }
