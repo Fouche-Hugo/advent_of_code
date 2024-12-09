@@ -387,3 +387,11 @@ dependencies = [
  "anyhow",
  "clap",
 ]
+
+[[package]]
+name = "y2024d8"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+]
