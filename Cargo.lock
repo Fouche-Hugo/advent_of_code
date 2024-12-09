@@ -395,3 +395,11 @@ dependencies = [
  "anyhow",
  "clap",
 ]
+
+[[package]]
+name = "y2024d9"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+]
