@@ -588,6 +588,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "y2024d12"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+]
+
+[[package]]
 name = "y2024d2"
 version = "0.1.0"
 dependencies = [
