@@ -131,85 +131,136 @@ fn part1(map: Vec<Vec<char>>) -> usize {
     total
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Neighbour {
+    NORTH,
+    SOUTH,
+    WEST,
+    EAST,
+}
+
+fn compute_neighbour(map: &[Vec<char>], position: Position) -> Vec<Neighbour> {
+    let plant = map[position.y][position.x];
+    let mut neighbours = vec![];
+
+    // NORTH
+    if position.y > 0 && map[position.y - 1][position.x] == plant {
+        neighbours.push(Neighbour::NORTH);
+    }
+
+    // SOUTH
+    if position.y + 1 < map.len() && map[position.y + 1][position.x] == plant {
+        neighbours.push(Neighbour::SOUTH);
+    }
+
+    // WEST
+    if position.x > 0 && map[position.y][position.x - 1] == plant {
+        neighbours.push(Neighbour::WEST);
+    }
+
+    // EAST
+    if position.x + 1 < map.len() && map[position.y][position.x + 1] == plant {
+        neighbours.push(Neighbour::EAST);
+    }
+
+    neighbours
+}
+
+fn compute_turns(map: &[Vec<char>], position: Position, neighbours: &[Neighbour]) -> usize {
+    let value = if neighbours.len() == 0 {
+        4
+    } else if neighbours.len() == 1 {
+        2
+    } else if neighbours.len() == 2
+        && (neighbours.contains(&Neighbour::WEST) && neighbours.contains(&Neighbour::EAST)
+            || neighbours.contains(&Neighbour::NORTH) && neighbours.contains(&Neighbour::SOUTH))
+    {
+        0
+    } else {
+        let mut turns = 0;
+
+        if neighbours.len() == 2 {
+            turns += 1;
+        }
+
+        let (x, y) = (position.x, position.y);
+        let plant = map[y][x];
+
+        if neighbours.contains(&Neighbour::EAST)
+            && neighbours.contains(&Neighbour::NORTH)
+            && map[y - 1][x + 1] != plant
+        {
+            turns += 1;
+        }
+
+        if neighbours.contains(&Neighbour::NORTH)
+            && neighbours.contains(&Neighbour::WEST)
+            && map[y - 1][x - 1] != plant
+        {
+            turns += 1;
+        }
+
+        if neighbours.contains(&Neighbour::WEST)
+            && neighbours.contains(&Neighbour::SOUTH)
+            && map[y + 1][x - 1] != plant
+        {
+            turns += 1;
+        }
+
+        if neighbours.contains(&Neighbour::SOUTH)
+            && neighbours.contains(&Neighbour::EAST)
+            && map[y + 1][x + 1] != plant
+        {
+            turns += 1;
+        }
+
+        turns
+    };
+
+    value
+}
+
 fn visit_area_part2(
     map: &[Vec<char>],
     start: Position,
     mut visited_positions: HashSet<Position>,
 ) -> (usize, HashSet<Position>) {
-    let current_plant = map[start.y][start.x];
-    let mut pos_neighbours = vec![];
-    let mut neg_neighbours = vec![];
-    let mut nb_turns = 0;
-
     visited_positions.insert(start);
 
-    // positive diff
-    for diff in NEIGHBOUR_POSITIVE {
-        let current_position = start + diff;
-        if current_position.x < map[0].len()
-            && current_position.y < map.len()
-            && map[current_position.y][current_position.x] == current_plant
-        {
-            pos_neighbours.push(diff);
+    let neighbours = compute_neighbour(map, start);
+    let current_turns = compute_turns(map, start, &neighbours);
 
-            if !visited_positions.contains(&current_position) {
-                let (current_nb_turns, current_visited_positions) =
-                    visit_area_part2(map, current_position, visited_positions);
-                nb_turns += current_nb_turns;
-                visited_positions = current_visited_positions;
-            }
+    let mut neighbour_turns = 0;
+
+    for neighbour in neighbours {
+        let neighbour_position = match neighbour {
+            Neighbour::NORTH => Position {
+                x: start.x,
+                y: start.y - 1,
+            },
+            Neighbour::SOUTH => Position {
+                x: start.x,
+                y: start.y + 1,
+            },
+            Neighbour::EAST => Position {
+                x: start.x + 1,
+                y: start.y,
+            },
+            Neighbour::WEST => Position {
+                x: start.x - 1,
+                y: start.y,
+            },
+        };
+
+        if !visited_positions.contains(&neighbour_position) {
+            let (current_neighbour_turns, current_neighbour_visited_positions) =
+                visit_area_part2(map, neighbour_position, visited_positions);
+            visited_positions = current_neighbour_visited_positions;
+            neighbour_turns += current_neighbour_turns;
         }
     }
 
-    // negative diff
-    for diff in NEIGHBOUR_POSITIVE {
-        if let Some(current_position) = start.checked_sub(&diff) {
-            if map[current_position.y][current_position.x] == current_plant {
-                neg_neighbours.push(diff);
-
-                if !visited_positions.contains(&current_position) {
-                    let (current_nb_turns, current_visited_positions) =
-                        visit_area_part2(map, current_position, visited_positions);
-                    nb_turns += current_nb_turns;
-                    visited_positions = current_visited_positions;
-                }
-            }
-        }
-    }
-
-    let plant_turns = if pos_neighbours.is_empty() && neg_neighbours.is_empty() {
-        4
-    } else if pos_neighbours.is_empty() && neg_neighbours.len() == 1 {
-        2
-    } else if neg_neighbours.is_empty() && pos_neighbours.len() == 1 {
-        2
-    } else if pos_neighbours.len() == 1 && neg_neighbours.len() == 1 {
-        if pos_neighbours[0].x == neg_neighbours[0].x || pos_neighbours[0].y == neg_neighbours[0].y
-        {
-            0
-        } else {
-            // check if diagonals exists
-            let neighbour1 = Position {
-                x: start.x + pos_neighbours[0].x,
-                y: start.y - neg_neighbours[0].y,
-            };
-            let neighbour2 = Position {
-                x: start.x - neg_neighbours[0].x,
-                y: start.y + pos_neighbours[0].y,
-            };
-            if map[neighbour1.y][neighbour1.x] == current_plant
-                && map[neighbour2.y][neighbour2.x] == current_plant
-            {
-                1
-            } else {
-                2
-            }
-        }
-    } else {
-        1
-    };
-
-    (plant_turns + nb_turns, visited_positions)
+    (neighbour_turns + current_turns, visited_positions)
 }
 
 fn part2(map: Vec<Vec<char>>) -> usize {
@@ -223,10 +274,6 @@ fn part2(map: Vec<Vec<char>>) -> usize {
             if !visited_positions.contains(&current_position) {
                 let (turns, current_visited_positions) =
                     visit_area_part2(&map, current_position, HashSet::new());
-                println!(
-                    "region ({x}, {y}): {turns}, {}",
-                    current_visited_positions.len()
-                );
                 total += turns * current_visited_positions.len();
                 visited_positions.extend(current_visited_positions);
             }
