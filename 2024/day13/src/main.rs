@@ -1,9 +1,7 @@
 use anyhow::Result;
 use clap::Parser;
 use std::{
-    cmp::min,
-    collections::HashSet,
-    ops::{Add, AddAssign, Mul, Sub},
+    ops::{Add, AddAssign, Mul},
     path::{Path, PathBuf},
 };
 
@@ -151,38 +149,40 @@ fn part1(machines: Vec<Machine>) -> usize {
     total
 }
 
-fn part2(machines: Vec<Machine>) -> usize {
-    let mut total = 0;
+// This one was not finished
+fn part2(_machines: Vec<Machine>) -> usize {
+    // let mut total = 0;
 
-    for machine in machines {
-        if let Some(tokens) = machine_minimum_tokens(&machine, 100) {
-            // // check if multiple of 1000000000
-            // let mut tokens_1000000000 = None;
-            // for i in 1..9 {
-            //     let machine_i = Machine {
-            //         a: machine.a,
-            //         b: machine.b,
-            //         target: Position {
-            //             x: 10_usize.pow(i),
-            //             y: 10_usize.pow(i),
-            //         },
-            //     };
+    // for machine in machines {
+    //     if let Some(tokens) = machine_minimum_tokens(&machine, 100) {
+    // // check if multiple of 1000000000
+    // let mut tokens_1000000000 = None;
+    // for i in 1..9 {
+    //     let machine_i = Machine {
+    //         a: machine.a,
+    //         b: machine.b,
+    //         target: Position {
+    //             x: 10_usize.pow(i),
+    //             y: 10_usize.pow(i),
+    //         },
+    //     };
 
-            //     if let Some(min_tokens_i) = machine_minimum_tokens(&machine_i, 100) {
-            //         tokens_1000000000 = Some(min_tokens_i * 10_usize.pow((9 - i) as u32));
-            //         break;
-            //     }
-            // }
+    //     if let Some(min_tokens_i) = machine_minimum_tokens(&machine_i, 100) {
+    //         tokens_1000000000 = Some(min_tokens_i * 10_usize.pow((9 - i) as u32));
+    //         break;
+    //     }
+    // }
 
-            // if let Some(tokens_1000000000) = tokens_1000000000 {
-            //     total += tokens + tokens_1000000000;
-            // }
+    // if let Some(tokens_1000000000) = tokens_1000000000 {
+    //     total += tokens + tokens_1000000000;
+    // }
 
-            // if format!("1000000000{}", machine.target).parse().unwrap() {}
-        }
-    }
+    // if format!("1000000000{}", machine.target).parse().unwrap() {}
+    // }
+    // }
 
-    total
+    // total
+    0
 }
 
 fn parse_input(input_file: &Path) -> Result<Vec<Machine>> {
