@@ -1469,6 +1469,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "y2025d6"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+]
+
+[[package]]
 name = "zerocopy"
 version = "0.7.35"
 source = "registry+https://github.com/rust-lang/crates.io-index"
